@@ -1,21 +1,22 @@
 // import Image from "next/image";
-import localFont from "next/font/local";
+import Categories from "@/components/Categories";
+import Footer from "@/components/Footer";
+import Hero from "@/components/Hero";
+import Navbar from "@/components/Navbar";
+import Head from 'next/head';
 
-// const geistSans = localFont({
-//   src: "./fonts/GeistVF.woff",
-//   variable: "--font-geist-sans",
-//   weight: "100 900",
-// });
-// const geistMono = localFont({
-//   src: "./fonts/GeistMonoVF.woff",
-//   variable: "--font-geist-mono",
-//   weight: "100 900",
-// });
+
 
 export default function Home() {
   return (
-   <div className="bg-slate-600 text-xl mx-4">
-    Hey welcome to my webpage
-   </div>
+    <>
+    <Head>
+    <title>The Comfy wear</title>
+    <meta name="description" content="This is an amazing e-commerce website" />
+    <link rel="icon" href="/favicon.ico" />
+  </Head>
+   <Hero/>
+   <Categories/>
+   </>
   );
 }
