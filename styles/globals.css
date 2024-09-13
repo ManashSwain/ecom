@@ -2,3 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
+body{
+    overflow-x: hidden;
+}
+
+@media screen and (max-width : 650px ){
+    .sidebar {
+        width: 70vw;
+    }
+    .mini-image{
+        width: 50px;
+    }
+    .itemDescription {
+        font-size: 16px;
+        margin-left: 10px;
+    }
+    .items {
+        padding: 8px;
+    }
+    
+}
