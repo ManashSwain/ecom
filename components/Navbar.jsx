@@ -1,6 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { IoCloseSharp } from "react-icons/io5";
 
 const Navbar = () => {
   return (
@@ -22,6 +23,9 @@ const Navbar = () => {
       <Link href={'/stickers'}><p className="mr-5 text-xl hover:text-gray-900">Stickers</p></Link>
     </nav>
     <Image className="object-cover object-center rounded cursor-pointer" alt="cart" src={'/cart.png'} width={20} height={20} />
+    <div className='sidebar absolute top-0 right-0 h-[100vh] w-[30vw] bg-blue-400 z-10'>
+    <IoCloseSharp />
+    </div>
   </div>
 </header>
     </>
