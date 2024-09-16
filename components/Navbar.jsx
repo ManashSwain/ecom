@@ -3,6 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { IoCloseSharp } from "react-icons/io5";
 import { FiMinusCircle, FiPlusCircle } from "react-icons/fi";
+import { CgProfile } from "react-icons/cg";
 
 const Navbar = ({ cart , addToCart , removeFromCart , clearCart , subtotal}) => {
   const togglecart = ()=>{
@@ -35,6 +36,11 @@ const Navbar = ({ cart , addToCart , removeFromCart , clearCart , subtotal}) => 
       <Link href={'/stickers'}><p className="mr-5 text-xl hover:text-gray-900">Stickers</p></Link>
     </nav>
     <Image  onClick={togglecart}   className="object-cover object-center rounded cursor-pointer" alt="cart" src={'/cart.png'} width={20} height={20} />
+
+    {/* profile  */}
+    {/* profile start  */}
+    <Link href={'/login'}><CgProfile className='m-2 cursor-pointer' /> </Link>
+    {/* profile end */}
 
     {/* side cart bar  */}
 
