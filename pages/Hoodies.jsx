@@ -8,7 +8,7 @@ const Hoodies = () => {
     <section className="text-gray-600 body-font">
   <div className="container px-5 py-24 mx-auto ">
     <div className="flex flex-wrap px-10 -m-4 mt-2">
-    <Link href={'./product/tshirts'} className="block m-auto my-2 ">
+    <Link href={'./product/hoodies'} className="block m-auto my-2 ">
           <div className="shadow-lg rounded-lg overflow-hidden transition-transform transform hover:scale-105">
             <div className="block relative rounded overflow-hidden">
               <Image 

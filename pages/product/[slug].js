@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-const Slug = () => {
+const Slug = ({addToCart}) => {
     const router = useRouter();
     const {slug} = router.query ;
     
@@ -109,7 +109,7 @@ const Slug = () => {
           <span className="title-font mx-4 font-medium text-2xl text-gray-900">$58.00</span>
 
           <div className='flex'>
-          <button className="flex ml-auto mx-4 text-white bg-indigo-500 border-0 py-2 px-2 focus:outline-none hover:bg-indigo-600 rounded">Add to Cart</button>
+          <button className="flex ml-auto mx-4 text-white bg-indigo-500 border-0 py-2 px-2 focus:outline-none hover:bg-indigo-600 rounded" onClick={()=>{addToCart(slug, 1, 'newshirt',4367,'s' ,'red')}}>Add to Cart</button>
           <button className="flex ml-auto mx-4 text-white bg-indigo-500 border-0 py-2 px-2 focus:outline-none hover:bg-indigo-600 rounded">Buy Now</button>
           </div>  
         </div>
@@ -119,8 +119,7 @@ const Slug = () => {
           </div>
           <div>
             {(!pinService && pinService != null  ) && <p className='text-red-600'>Sorry! We do not deliver to this pincode</p>}
-            {(pinService && pinService != null  ) && <p className='text-green-600'>yay! This pincode is serviceable</p>}
-            
+            {(pinService && pinService != null  ) && <p className='text-green-600'>yay! This pincode is serviceable</p>}  
           </div>
       </div>
     </div>
