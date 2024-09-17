@@ -68,9 +68,6 @@ export default function App({ Component, pageProps }) {
     if(itemCode in cart){
      newCart[itemCode].qty = newCart[itemCode].qty - qty ;
     }
-    console.log(newCart);
-    console.log(newCart[itemCode]);
-    console.log(itemCode);
      if (cart[itemCode].qty <= 0){
       delete newCart[itemCode];
     }
