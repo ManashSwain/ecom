@@ -6,4 +6,7 @@ const UserSchema = new mongoose.Schema({
     password : {type : String , required : true},
 },{timestamps : true});
 
+// To avoid recreating of models 
+mongoose.models = {}
+
 export default mongoose.model('User' , UserSchema);
