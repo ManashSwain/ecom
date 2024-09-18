@@ -1,3 +1,4 @@
+// Middleware and database connectivity 
 
 const mongoose = require('mongoose');
 
