@@ -2,12 +2,16 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import mongoose from 'mongoose';
+import Product from '@/Models/Product';
 
-const Slug = ({addToCart}) => {
+const Slug = ({addToCart , product , variants}) => {
+  console.log('product is :' , product);
+  console.log(variants);
     const router = useRouter();
     const {slug} = router.query ;
     
-    const [pin , setPin] = useState( );
+    const [pin , setPin] = useState();
     const [pinService , setpinService] = useState();
 
     const checkPincode = async()=>{
@@ -23,6 +27,14 @@ const Slug = ({addToCart}) => {
 
     const handleChange = (e)=>{
       setPin(e.target.value);
+    }
+
+    const [color , setColor] = useState(product.color);
+    const [size , setSize] = useState(product.size);
+
+    const refreshVaraint = (newsize,newcolor) => {
+      let url = `http://localhost:3000/product/${variants[newcolor][newsize]['slug']}` ;
+      window.location = url ;
     }
     
   return (
@@ -81,21 +93,32 @@ const Slug = ({addToCart}) => {
         </div>
         <p className="leading-relaxed">Fam locavore kickstarter distillery. Mixtape chillwave tumeric sriracha taximy chia microdosing tilde DIY. XOXO fam indxgo juiceramps cornhole raw denim forage brooklyn. Everyday carry +1 seitan poutine tumeric. Gastropub blue bottle austin listicle pour-over, neutra jean shorts keytar banjo tattooed umami cardigan.</p>
         <div className="flex mt-6 items-center pb-5 border-b-2 border-gray-100 mb-5">
-          <div className="flex">
+          {/* <div className="flex">
             <span className="mr-3">Color</span>
-            <button className="border-2 border-gray-300 rounded-full w-6 h-6 focus:outline-none"></button>
-            <button className="border-2 border-gray-300 ml-1 bg-gray-700 rounded-full w-6 h-6 focus:outline-none"></button>
-            <button className="border-2 border-gray-300 ml-1 bg-indigo-500 rounded-full w-6 h-6 focus:outline-none"></button>
-          </div>
+           {Object.keys(variants).includes('white') && Object.keys(variants['white']).includes(size) && <button className={`border-2 border-gray-300 rounded-full w-6 h-6 focus:outline-none ${color === 'white' ? 'border-black' : 'border-gray-300'}`} onClick={()=>{refreshVaraint(size , 'white')}}></button>}
+           {Object.keys(variants).includes('green') && Object.keys(variants['green']).includes(size)  && <button className={`border-2 border-gray-300 bg-green-500 rounded-full w-6 h-6 focus:outline-none ${color === 'green' ? 'border-black' : 'border-gray-300'}`} onClick={()=>{refreshVaraint(size , 'green')}}></button>}
+           {Object.keys(variants).includes('blue') && Object.keys(variants['blue']).includes(size)  && <button className={`border-2 border-gray-300 bg-blue-500 rounded-full w-6 h-6 focus:outline-none ${color === 'blue' ? 'border-black' : 'border-gray-300'}`} onClick={()=>{refreshVaraint(size , 'blue')}}></button>}
+           {Object.keys(variants).includes('black') && Object.keys(variants['black']).includes(size)  && <button className={`border-2 border-gray-300 bg-black rounded-full w-6 h-6 focus:outline-none ${color === 'black' ? 'border-black' : 'border-gray-300'}`} onClick={()=>{refreshVaraint(size , 'black')}}></button>}
+           {Object.keys(variants).includes('orange') && Object.keys(variants['orange']).includes(size)  && <button className={`border-2 border-gray-300 bg-orange-500 rounded-full w-6 h-6 focus:outline-none ${color === 'orange' ? 'border-black' : 'border-gray-300'}`} onClick={()=>{refreshVaraint(size , 'orange')}}></button>}
+          </div> */}
+          <div className="flex">
+  <span className="mr-3">Color</span>
+  {Object.keys(variants).includes('white') && Object.keys(variants['white']).includes(size) && <button className={`border-2 border-gray-300 rounded-full w-6 h-6 focus:outline-none ${color === 'white' ? 'border-black' : 'border-gray-300'}`} onClick={()=>{refreshVaraint(size , 'white')}}></button>}
+  {Object.keys(variants).includes('green') && Object.keys(variants['green']).includes(size) && <button className={`border-2 border-gray-300 bg-green-500 rounded-full w-6 h-6 focus:outline-none ${color === 'green' ? 'border-black' : 'border-gray-300'}`} onClick={()=>{refreshVaraint(size , 'green')}}></button>}
+  {Object.keys(variants).includes('blue') && Object.keys(variants['blue']).includes(size) && <button className={`border-2 border-gray-300 bg-blue-500 rounded-full w-6 h-6 focus:outline-none ${color === 'blue' ? 'border-black' : 'border-gray-300'}`} onClick={()=>{refreshVaraint(size , 'blue')}}></button>}
+  {Object.keys(variants).includes('black') && Object.keys(variants['black']).includes(size) && <button className={`border-2 border-gray-300 bg-black rounded-full w-6 h-6 focus:outline-none ${color === 'black' ? 'border-black' : 'border-gray-300'}`} onClick={()=>{refreshVaraint(size , 'black')}}></button>}
+  {Object.keys(variants).includes('orange') && Object.keys(variants['orange']).includes(size) && <button className={`border-2 border-gray-300 bg-orange-500 rounded-full w-6 h-6 focus:outline-none ${color === 'orange' ? 'border-black' : 'border-gray-300'}`} onClick={()=>{refreshVaraint(size , 'orange')}}></button>}
+</div>
+
           <div className="flex ml-6 items-center">
             <span className="mr-3">Size</span>
             <div className="relative">
-              <select className="rounded border appearance-none border-gray-300 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 text-base pl-3 pr-10">
-                <option>SM</option>
-                <option>M</option>
-                <option>L</option>
-                <option>XL</option>
-                <option>XXL</option>
+              <select value={size} onChange={(e)=>{refreshVaraint(e.target.value , color)}} className="rounded border appearance-none border-gray-300 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 text-base pl-3 pr-10">
+                {Object.keys(variants[color]).includes('s') && <option value={'s'}>S</option>}
+                {Object.keys(variants[color]).includes('m') && <option value={'m'}>M</option>}
+                {Object.keys(variants[color]).includes('l') && <option value={'l'}>L</option>}
+                {Object.keys(variants[color]).includes('xl') && <option value={'xl'}>XL</option>}
+                {Object.keys(variants[color]).includes('xxl') && <option value={'xxl'}>XXl</option>}
               </select>
               <span className="absolute right-0 top-0 h-full w-10 text-center text-gray-600 pointer-events-none flex items-center justify-center">
                 <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-4 h-4" viewBox="0 0 24 24">
@@ -127,6 +150,26 @@ const Slug = ({addToCart}) => {
 </section>
     </>
   )
+}
+
+export async function getServerSideProps(context) {
+  if(!mongoose.connections[0].readyState){
+    await mongoose.connect(process.env.MONGO_URI);
+  }
+    let product =  await Product.findOne({ slug : context.query.slug });
+    let variants = await Product.find({ title : product.title});
+     let colorsizeslug = {};
+    //  sample object : {red: {xl : {slug : tshirt-xl}}}
+    for(let item of variants){
+      if(Object.keys(colorsizeslug).includes(item.color)){
+        colorsizeslug[item.color][item.size] = {slug : item.slug};
+      }
+      else {
+        colorsizeslug[item.color] = {};
+        colorsizeslug[item.color][item.size] = {slug : item.slug};
+      }
+    }
+  return { props: {product :JSON.parse(JSON.stringify(product)), variants : JSON.parse(JSON.stringify(colorsizeslug)) } }
 }
 
 export default Slug

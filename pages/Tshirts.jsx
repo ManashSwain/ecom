@@ -17,7 +17,7 @@ const Tshirts = ({products}) => {
   <div className="container px-5 py-24 mx-auto ">
     <div className="flex flex-wrap px-10 -m-4 mt-2">
     {Object.keys(products).map((item)=>{
-return<Link key={products[item]._id} href={`./product/${item.slug}`} className="block m-auto my-2 ">
+return<Link key={products[item]._id} href={`./product/${products[item].slug}`} className="block m-auto my-2 ">
 <div className="shadow-lg rounded-lg overflow-hidden transition-transform transform hover:scale-105">
   <div className="block relative rounded overflow-hidden">
     <Image 
