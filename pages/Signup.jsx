@@ -1,8 +1,47 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
 const Signup = () => {
+   
+  const [name , setName] = useState('');
+  const [email , setEmail] = useState('');
+  const [password , setPassword] = useState('');
+
+  const handleChange = (e)=>{
+    if(e.target.name == 'name'){
+     setName(e.target.value);
+    }
+    else if(e.target.name == 'email'){
+      setEmail(e.target.value);
+    }
+    else if(e.target.name == 'password'){
+      setPassword(e.target.value);
+    }
+  }
+
+  const handleSubmit =async (e)=>{
+    console.log("Name: ", name);
+    console.log("email: ", email);
+    console.log("password: ", password);
+    
+    e.preventDefault();
+    const formBody = {name , email , password };
+  
+    let request =  await fetch("http://localhost:3000/api/signup", {
+      method: "POST",
+      headers : { 'Content-Type' : 'application/json'},
+      body: JSON.stringify(formBody),
+    });
+    console.log(formBody);
+    let response = await request.json();
+    console.log(response);
+    setName('');
+    setEmail('');
+    setPassword('');
+    console.log("form submitted successfully")
+  }
+
   return (
     <>
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
@@ -20,18 +59,21 @@ const Signup = () => {
           </p></div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form action="#" method="POST" className="space-y-6">
+          <form method="POST" onSubmit={handleSubmit} className="space-y-6">
           <div>
               <label htmlFor="name" className="block text-sm font-medium leading-6 text-gray-900">
                 Enter your name
               </label>
               <div className="mt-2">
-                <input
+                <input   
+                value={name}
+                  onChange={handleChange}          
                   id="name"
                   name="name"
                   type="text"
                   required
                   autoComplete="email"
+                  
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>
@@ -41,7 +83,9 @@ const Signup = () => {
                 Email address
               </label>
               <div className="mt-2">
-                <input
+                <input    
+                value={email}
+                   onChange={handleChange}             
                   id="email"
                   name="email"
                   type="email"
@@ -59,7 +103,9 @@ const Signup = () => {
                 </label>
               </div>
               <div className="mt-2">
-                <input
+                <input  
+                value={password}
+                  onChange={handleChange}        
                   id="password"
                   name="password"
                   type="password"

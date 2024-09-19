@@ -7,6 +7,4 @@ const UserSchema = new mongoose.Schema({
 },{timestamps : true});
 
 // To avoid recreating of models 
-mongoose.models = {}
-
-export default mongoose.model('User' , UserSchema);
+export default  mongoose.models.User || mongoose.model('User' , UserSchema);
