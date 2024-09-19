@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { ToastContainer, toast } from 'react-toastify';
+  import 'react-toastify/dist/ReactToastify.css';
 
 const Signup = () => {
    
@@ -40,6 +42,16 @@ const Signup = () => {
     setEmail('');
     setPassword('');
     console.log("form submitted successfully")
+    toast.success('User Created Successfully', {
+      position: "top-center",
+      autoClose: 1000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+      });
   }
 
   return (
@@ -129,6 +141,7 @@ const Signup = () => {
           
         </div>
       </div>
+      <ToastContainer/>
     </>
   )
 }

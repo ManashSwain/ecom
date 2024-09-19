@@ -1,8 +1,72 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useRouter } from 'next/router'
+
 
 const Login = () => {
+  const router = useRouter()
+  const [email , setEmail] = useState('');
+  const [password , setPassword] = useState('');
+
+   const handleChange = (e)=>{
+     if(e.target.name == 'email'){
+      setEmail(e.target.value);
+     }
+     else if (e.target.name == 'password'){
+      setPassword(e.target.value);
+     }
+   }
+
+   const handleSubmit =async (e)=>{
+    console.log("email: ", email);
+    console.log("password: ", password);
+     e.preventDefault();
+     const formData = {email , password};
+     let request =await fetch('http://localhost:3000/api/login' , {
+       method : "POST",
+       headers : {
+        'Content-Type' : 'application/json'
+       },
+       body : JSON.stringify(formData)
+     })
+     console.log(formData)
+     let response = await request.json();
+     console.log(response);
+     if(response.success){
+      toast.success('Login Successfull', {
+        position: "top-center",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        });
+        setTimeout(()=>{
+          router.push('http://localhost:3000')
+        },1000)   
+     }
+     else {
+      toast.error(response.error , {
+        position: "top-center",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        });
+     }
+     
+     setEmail('');
+     setPassword('');
+   }
+
   return (
    <>
    <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
@@ -20,13 +84,15 @@ const Login = () => {
           </p></div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form action="#" method="POST" className="space-y-6">
+          <form onSubmit={handleSubmit} method="POST" className="space-y-6">
             <div>
               <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
                 Email address
               </label>
               <div className="mt-2">
                 <input
+                value={email}
+                onChange={handleChange}
                   id="email"
                   name="email"
                   type="email"
@@ -50,6 +116,8 @@ const Login = () => {
               </div>
               <div className="mt-2">
                 <input
+                value={password}
+                onChange={handleChange}
                   id="password"
                   name="password"
                   type="password"
@@ -69,10 +137,9 @@ const Login = () => {
               </button>
             </div>
           </form>
-
-          
         </div>
       </div>
+      <ToastContainer/>
    </>
   )
 }
