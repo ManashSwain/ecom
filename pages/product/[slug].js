@@ -4,6 +4,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import mongoose from 'mongoose';
 import Product from '@/Models/Product';
+import { ToastContainer, toast } from 'react-toastify';
+  import 'react-toastify/dist/ReactToastify.css';
 
 const Slug = ({addToCart , product , variants , buyNow}) => {
   console.log('product is :' , product);
@@ -19,9 +21,30 @@ const Slug = ({addToCart , product , variants , buyNow}) => {
       let pincheck = await pinvalue.json();
       if(pincheck.includes(parseInt(pin))){
          setpinService(true);
+         toast.success('We deliver to this pincode', {
+          position: "top-right",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          
+          });
       }
       else{
         setpinService(false);
+        toast.error('We do not deliver to this pincode', {
+          position: "top-right",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          });
       }
     }
 
@@ -37,8 +60,6 @@ const Slug = ({addToCart , product , variants , buyNow}) => {
       
       let url = `http://localhost:3000/product/${variants[newcolor][newsize]['slug']}` ;
       window.location = url ;
-
- 
     }
     
   return (
@@ -136,7 +157,9 @@ const Slug = ({addToCart , product , variants , buyNow}) => {
           <span className="title-font mx-4 font-medium text-2xl text-gray-900">$58.00</span>
 
           <div className='flex'>
+            
           <button className="flex ml-auto mx-4 text-white bg-indigo-500 border-0 py-2 px-2 focus:outline-none hover:bg-indigo-600 rounded" onClick={()=>{addToCart(slug, 1,  product.title ,476, size , color)}}>Add to Cart</button>
+          <ToastContainer/>
           <button onClick={()=>{buyNow(slug, 1,  product.title ,476, size , color)}} className="flex ml-auto mx-4 text-white bg-indigo-500 border-0 py-2 px-2 focus:outline-none hover:bg-indigo-600 rounded">Buy Now</button>
           </div>  
         </div>
