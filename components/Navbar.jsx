@@ -59,7 +59,7 @@ const Navbar = ({ cart , addToCart , removeFromCart , clearCart , subtotal}) => 
               src={'/tshirt.jpg'} 
             />
      </div>
-     <div className="itemDescription font-bold text-xl">{cart[item].name}</div>
+     <div className="itemDescription font-bold text-xl">{cart[item].name}{cart[item].size}/{cart[item].variant}</div>
      <div className="quantity flex">
      <FiMinusCircle className='text-2xl cursor-pointer m-1' onClick={()=>{removeFromCart(item,1,cart[item].name, cart[item].price,cart[item].size,cart[item].variant)}}/>
       <span className='my-1'>{cart[item].qty}</span>
