@@ -14,7 +14,7 @@ const Signup = () => {
 
   useEffect(()=>{
     if(localStorage.getItem('token')){
-      router.push('/');
+      router.push(`${process.env.NEXT_PUBLIC_HOST}/`);
     }
   },[router])
 
@@ -38,7 +38,7 @@ const Signup = () => {
     e.preventDefault();
     const formBody = {name , email , password };
   
-    let request =  await fetch("http://localhost:3000/api/signup", {
+    let request =  await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/signup`, {
       method: "POST",
       headers : { 'Content-Type' : 'application/json'},
       body: JSON.stringify(formBody),

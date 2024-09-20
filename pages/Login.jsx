@@ -33,7 +33,7 @@ const Login = () => {
     console.log("password: ", password);
      e.preventDefault();
      const formData = {email , password};
-     let request =await fetch('http://localhost:3000/api/login' , {
+     let request =await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/login` , {
        method : "POST",
        headers : {
         'Content-Type' : 'application/json'
@@ -56,7 +56,7 @@ const Login = () => {
         theme: "light",
         });
         setTimeout(()=>{
-          router.push('http://localhost:3000')
+          router.push(`${process.env.NEXT_PUBLIC_HOST}/`)
         },1000)   
      }
      else {

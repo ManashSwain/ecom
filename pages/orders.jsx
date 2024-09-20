@@ -8,7 +8,7 @@ const Orders = () => {
 
     useEffect(()=>{
       if(!localStorage.getItem('token')){
-        router.push('/');
+        router.push(`${process.env.NEXT_PUBLIC_HOST}/`);
       }
     },[router])
   return (
