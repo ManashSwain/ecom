@@ -1,7 +1,7 @@
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import "@/styles/globals.css";
-import Router from "next/router";
+import  { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { ToastContainer, toast } from 'react-toastify';
   import 'react-toastify/dist/ReactToastify.css';
@@ -9,9 +9,15 @@ import { ToastContainer, toast } from 'react-toastify';
 
 export default function App({ Component, pageProps }) {
 
+  const router = useRouter();
+
   // cart features 
   const [cart,setCart] = useState({});
   const [subtotal,setSubTotal] = useState(0);
+  // for navbar refreshing 
+  const [key , setkey] = useState(0);
+
+  const [user,setUser] = useState({value : null});
 
   // getting cart details initially 
 
@@ -26,7 +32,14 @@ export default function App({ Component, pageProps }) {
       console.error(error);
       localStorage.clear();
     }
-  },[])
+    let token = localStorage.getItem("token");
+    console.log(token);
+    console.log(key);
+    if(token){
+      setUser({value : token});
+      setkey(Math.random());
+    }
+  },[router.query]);
   
   // Save to localstorage 
 
@@ -94,11 +107,34 @@ export default function App({ Component, pageProps }) {
     let cart = {itemCode : {qty : 1 , name, price ,size, variant}}
     setCart(cart);
     saveCart(cart);
-    Router.push('/checkout');
+    router.push('/checkout');
   }
 
+//  logout 
+
+const logout = ()=>{
+  localStorage.removeItem("token");
+  setkey(Math.random());
+  setUser({value:null});
+  if(setUser.value==null){
+  toast.error('user loggedout successfully', {
+    position: "top-center",
+    autoClose: 1000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
+    
+    });
+  }
+}
+
+  
+
   return <>
-  <Navbar cart={cart} addToCart={addToCart} removeFromCart={removeFromCart} clearCart={clearCart} subtotal={subtotal}/>
+  <Navbar key={key}logout={logout}  user={user} cart={cart} addToCart={addToCart} removeFromCart={removeFromCart} clearCart={clearCart} subtotal={subtotal}/>
   <Component buyNow={buyNow} cart={cart} addToCart={addToCart} removeFromCart={removeFromCart} clearCart={clearCart} subtotal={subtotal} {...pageProps} />
   <Footer/>
   </>

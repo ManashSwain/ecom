@@ -1,11 +1,12 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { IoCloseSharp } from "react-icons/io5";
 import { FiMinusCircle, FiPlusCircle } from "react-icons/fi";
 import { CgProfile } from "react-icons/cg";
 
-const Navbar = ({ cart , addToCart , removeFromCart , clearCart , subtotal}) => {
+const Navbar = ({user,logout, cart , addToCart , removeFromCart , clearCart , subtotal}) => {
+  const [dropdown , setDropdown] = useState(false);
   const togglecart = ()=>{
     if(ref.current.classList.contains('translate-x-full')){
       ref.current.classList.remove("translate-x-full");
@@ -16,6 +17,9 @@ const Navbar = ({ cart , addToCart , removeFromCart , clearCart , subtotal}) => 
       ref.current.classList.add("translate-x-full");
     }
   }
+
+
+  
   const ref = useRef();
   return (
     <>
@@ -39,7 +43,14 @@ const Navbar = ({ cart , addToCart , removeFromCart , clearCart , subtotal}) => 
 
     {/* profile  */}
     {/* profile start  */}
-    <Link href={'/login'}><CgProfile className='m-2 cursor-pointer' /> </Link>
+   {user.value && <div><CgProfile  onMouseOver={()=>{setDropdown(true)}}  className='m-2 text-2xl cursor-pointer' /></div>}
+   { dropdown && <div onMouseLeave={()=>{setDropdown(false)}}  className='profilebox bg-indigo-600 p-3 rounded-md absolute top-14 right-6'>
+     <li className='list-none text-white font-bold mb-2 cursor-pointer hover:text-gray-300'>Account</li>
+     <li className='list-none text-white font-bold  mb-2 cursor-pointer hover:text-blue-400'>Orders</li>
+     <li className='list-none text-white font-bold  mb-2 cursor-pointer hover:text-blue-400' onClick={logout}>Logout</li>
+   </div>}
+   {!user.value && <Link href={'/login'}> <button className='bg-indigo-600 text-white font-bold p-2 rounded-md cursor-pointer'>Login</button></Link>}
+
     {/* profile end */}
 
     {/* side cart bar  */}
