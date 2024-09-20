@@ -36,6 +36,7 @@ const Login = () => {
      let response = await request.json();
      console.log(response);
      if(response.success){
+      localStorage.setItem('token' ,  response.token)
       toast.success('Login Successfull', {
         position: "top-center",
         autoClose: 1000,
