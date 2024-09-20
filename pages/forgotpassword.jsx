@@ -1,8 +1,16 @@
-import React from 'react';
+import React ,{ useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/router'
 
-const forgotpassword = () => {
+const Forgotpassword = () => {
+  const router = useRouter();
+
+  useEffect(()=>{
+    if(localStorage.getItem('token')){
+      router.push('/');
+    }
+  },[router])
   return (
    <>
    <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
@@ -54,4 +62,4 @@ const forgotpassword = () => {
   )
 }
 
-export default forgotpassword
+export default Forgotpassword

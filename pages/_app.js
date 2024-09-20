@@ -5,11 +5,13 @@ import  { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { ToastContainer, toast } from 'react-toastify';
   import 'react-toastify/dist/ReactToastify.css';
+  import LoadingBar from 'react-top-loading-bar'
 
 
 export default function App({ Component, pageProps }) {
 
   const router = useRouter();
+  const [progress, setProgress] = useState(0)
 
   // cart features 
   const [cart,setCart] = useState({});
@@ -22,6 +24,12 @@ export default function App({ Component, pageProps }) {
   // getting cart details initially 
 
   useEffect(()=>{
+    router.events.on('routeChangeStart',()=>{
+      setProgress(40);
+    })
+    router.events.on('routeChangeComplete',()=>{
+      setProgress(100);
+    })
     try{
      if(localStorage.getItem('cart')) {
        setCart(JSON.parse(localStorage.getItem('cart')));
@@ -39,6 +47,7 @@ export default function App({ Component, pageProps }) {
       setUser({value : token});
       setkey(Math.random());
     }
+    
   },[router.query]);
   
   // Save to localstorage 
@@ -126,7 +135,6 @@ const logout = ()=>{
     draggable: true,
     progress: undefined,
     theme: "light",
-    
     });
   }
 }
@@ -134,8 +142,15 @@ const logout = ()=>{
   
 
   return <>
-  <Navbar key={key}logout={logout}  user={user} cart={cart} addToCart={addToCart} removeFromCart={removeFromCart} clearCart={clearCart} subtotal={subtotal}/>
-  <Component buyNow={buyNow} cart={cart} addToCart={addToCart} removeFromCart={removeFromCart} clearCart={clearCart} subtotal={subtotal} {...pageProps} />
+   <LoadingBar
+        color='#3498db'
+        progress={progress}
+        waitingTime = {400}
+        height = {3}
+        onLoaderFinished={() => setProgress(100)}
+      />
+  <Navbar key={key} logout={logout}  user={user} cart={cart} addToCart={addToCart} removeFromCart={removeFromCart} clearCart={clearCart} subtotal={subtotal}/>
+  <Component  buyNow={buyNow} cart={cart} addToCart={addToCart} removeFromCart={removeFromCart} clearCart={clearCart} subtotal={subtotal} {...pageProps} />
   <Footer/>
   </>
   
