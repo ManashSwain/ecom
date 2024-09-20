@@ -125,18 +125,7 @@ const logout = ()=>{
   localStorage.removeItem("token");
   setkey(Math.random());
   setUser({value:null});
-  if(setUser.value==null){
-  toast.error('user loggedout successfully', {
-    position: "top-center",
-    autoClose: 1000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: "light",
-    });
-  }
+  router.push('/'); 
 }
 
   
