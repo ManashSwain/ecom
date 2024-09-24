@@ -1,12 +1,57 @@
-import React from 'react';
+import React , {useState} from 'react';
 import { FiMinusCircle, FiPlusCircle } from "react-icons/fi";
 import Image from 'next/image';
 import Link from 'next/link';
+import Head from 'next/head';
+import Script from 'next/script';
+
+
 
 const Checkout = ({ cart , addToCart , removeFromCart , subtotal}) => {
+
+  const initiatePayment = async ()=>{
+    let oid = Math.floor(Math.random()* Date.now()) ;
+    const data = {cart , subtotal,oid , email : "email"};
+    let a = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/pretransaction`,{
+      method : 'POST',
+      headers : {
+        'Content-Type' : 'application/json',
+      },
+      body : JSON.stringify(data),
+    })
+    let txnres = await a.json();
+    let txntoken = txnres.txntoken ;
+    console.log(txntoken);
+    var config = {
+       "root": "",
+       "flow": "DEFAULT",
+       "data": {
+       "orderId": oid,
+       "token": txntoken,
+       "tokenType": "TXN_TOKEN",
+       "amount": subtotal,
+     },
+     "handler": {
+      "notifyMerchant" : function(eventName, data){
+        console.log("notifyMerchant handler function called");
+        console.log("eventName =>" , eventName); 
+        console.log("data =>" , data); 
+      }
+     }
+      }; 
+   window.Paytm.CheckoutJS.init(config).then(function onSuccess(){
+     window.Paytm.CheckoutJS.invoke();
+   }).catch(function onError(error){
+    console.log("error =>" , error);
+   })
+     
+  }
+ 
   return (
     <>
    <div className="container mx-auto  p-10">
+    <Head> <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0"/></Head>
+    <Script type='application/javascript' crossOrigin='anonymous' src={`${process.env.NEXT_PUBLIC_PAYTM_HOST}/merchantpgpui/checkoutjs/merchants/${process.env.NEXT_PUBLIC_PAYTM_MID}.js`}></Script>
      <h2 className='text-2xl font-bold text-center mb-12'>Checkout</h2>
      <div>
       <h2 className='text-2xl font-bold mb-6'>1.Delivery details</h2>
@@ -80,7 +125,8 @@ const Checkout = ({ cart , addToCart , removeFromCart , subtotal}) => {
 
           {/* Payment  */}
           <div className="payment">
-          <Link href={'/checkout'}><button className='p-2 text-lg font-bold rounded-lg text-white bg-blue-600 m-2 hover:bg-blue-500'>Pay ₹ {subtotal} </button></Link>
+          <button onClick={initiatePayment} className='p-2 text-lg font-bold rounded-lg text-white bg-blue-600 m-2 hover:bg-blue-500'>Pay ₹ {subtotal} </button>
+
           </div>
          </div>
        </div>
@@ -90,3 +136,5 @@ const Checkout = ({ cart , addToCart , removeFromCart , subtotal}) => {
 }
 
 export default Checkout
+
+

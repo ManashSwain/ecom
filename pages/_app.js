@@ -49,6 +49,7 @@ export default function App({ Component, pageProps }) {
     }
     
   },[router.query]);
+
   
   // Save to localstorage 
 
