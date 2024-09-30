@@ -9,49 +9,88 @@ import Script from 'next/script';
 
 const Checkout = ({ cart , addToCart , removeFromCart , subtotal}) => {
 
-  const initiatePayment = async ()=>{
-    let oid = Math.floor(Math.random()* Date.now()) ;
-    const data = {cart , subtotal,oid , email : "email"};
-    let a = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/pretransaction`,{
-      method : 'POST',
-      headers : {
-        'Content-Type' : 'application/json',
-      },
-      body : JSON.stringify(data),
-    })
-    let txnres = await a.json();
-    let txntoken = txnres.txntoken ;
-    console.log(txntoken);
-    var config = {
-       "root": "",
-       "flow": "DEFAULT",
-       "data": {
-       "orderId": oid,
-       "token": txntoken,
-       "tokenType": "TXN_TOKEN",
-       "amount": subtotal,
-     },
-     "handler": {
-      "notifyMerchant" : function(eventName, data){
-        console.log("notifyMerchant handler function called");
-        console.log("eventName =>" , eventName); 
-        console.log("data =>" , data); 
-      }
-     }
-      }; 
-   window.Paytm.CheckoutJS.init(config).then(function onSuccess(){
-     window.Paytm.CheckoutJS.invoke();
-   }).catch(function onError(error){
-    console.log("error =>" , error);
-   })
+  // const initiatePayment = async ()=>{
+  //   let oid = Math.floor(Math.random()* Date.now()) ;
+  //   const data = {cart , subtotal,oid , email : "email"};
+  //   let a = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/pretransaction`,{
+  //     method : 'POST',
+  //     headers : {
+  //       'Content-Type' : 'application/json',
+  //     },
+  //     body : JSON.stringify(data),
+  //   })
+  //   let txnres = await a.json();
+  //   let txntoken = txnres.txntoken ;
+  //   console.log(txntoken);
+  //   var config = {
+  //      "root": "",
+  //      "flow": "DEFAULT",
+  //      "data": {
+  //      "orderId": oid,
+  //      "token": txntoken,
+  //      "tokenType": "TXN_TOKEN",
+  //      "amount": subtotal,
+  //    },
+  //    "handler": {
+  //     "notifyMerchant" : function(eventName, data){
+  //       console.log("notifyMerchant handler function called");
+  //       console.log("eventName =>" , eventName); 
+  //       console.log("data =>" , data); 
+  //     }
+  //    }
+  //     }; 
+  //  window.Paytm.CheckoutJS.init(config).then(function onSuccess(){
+  //    window.Paytm.CheckoutJS.invoke();
+  //  }).catch(function onError(error){
+  //   console.log("error =>" , error);
+  //  })
      
-  }
+  // }
+
+  const initiatePayment = async () => {
+    const response = await fetch('/api/create-order', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ amount: subtotal * 100 }), // Convert to paise
+    });
+
+    const orderData = await response.json();
+    if (!orderData.id) {
+      console.error('Error creating order:', orderData);
+      return;
+    }
+
+    const options = {
+      key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID, // Your Razorpay Key ID
+      amount: orderData.amount, // Amount in paise
+      currency: orderData.currency,
+      name: 'Your App Name',
+      description: 'Test Transaction',
+      order_id: orderData.id, // Order ID returned from the backend
+      handler: function (response) {
+        alert(`Payment successful! Payment ID: ${response.razorpay_payment_id}`);
+      },
+      prefill: {
+        name: document.getElementById('name').value,
+        email: document.getElementById('email').value,
+        contact: document.getElementById('phonenumber').value,
+      },
+      theme: {
+        color: '#3399cc',
+      },
+    };
+
+    const razorpay = new window.Razorpay(options);
+    razorpay.open();
+  };
  
   return (
     <>
    <div className="container mx-auto  p-10">
     <Head> <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0"/></Head>
-    <Script type='application/javascript' crossOrigin='anonymous' src={`${process.env.NEXT_PUBLIC_PAYTM_HOST}/merchantpgpui/checkoutjs/merchants/${process.env.NEXT_PUBLIC_PAYTM_MID}.js`}></Script>
+    {/* <Script type='application/javascript' crossOrigin='anonymous' src={`${process.env.NEXT_PUBLIC_PAYTM_HOST}/merchantpgpui/checkoutjs/merchants/${process.env.NEXT_PUBLIC_PAYTM_MID}.js`}></Script> */}
      <h2 className='text-2xl font-bold text-center mb-12'>Checkout</h2>
      <div>
       <h2 className='text-2xl font-bold mb-6'>1.Delivery details</h2>
@@ -125,7 +164,8 @@ const Checkout = ({ cart , addToCart , removeFromCart , subtotal}) => {
 
           {/* Payment  */}
           <div className="payment">
-          <button onClick={initiatePayment} className='p-2 text-lg font-bold rounded-lg text-white bg-blue-600 m-2 hover:bg-blue-500'>Pay ₹ {subtotal} </button>
+          {/* <button onClick={initiatePayment} className='p-2 text-lg font-bold rounded-lg text-white bg-blue-600 m-2 hover:bg-blue-500'>Pay ₹ {subtotal} </button> */}
+          <button onClick={initiatePayment} disabled={true} className=' disabled:bg-blue-300 p-2 text-lg font-bold rounded-lg text-white bg-blue-600 m-2 hover:bg-blue-500'>Pay ₹ {subtotal} </button>
 
           </div>
          </div>

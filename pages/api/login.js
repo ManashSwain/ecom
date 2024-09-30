@@ -8,12 +8,12 @@ var jwt = require('jsonwebtoken');
     if(req.method === 'POST'){
         console.log(req.body);
         let user = await User.findOne({"email" : req.body.email});
-        var bytes  = CryptoJS.AES.decrypt(user.password , 'secret123');
+        var bytes  = CryptoJS.AES.decrypt(user.password , process.env.AES_SECRET);
         var decryptedpass = bytes.toString(CryptoJS.enc.Utf8);
         if(user){
             console.log(token)
             if(req.body.email == user.email &&  req.body.password == decryptedpass){
-                var token = jwt.sign({ success : true ,name : user.name , email : user.email,}, 'jwtsecret',{ expiresIn: '1h' });
+                var token = jwt.sign({ success : true ,name : user.name , email : user.email,}, process.env.JWT_SECRET ,{ expiresIn: '1h' });
                 res.status(200).json({success : true , token});
             }
             else {
